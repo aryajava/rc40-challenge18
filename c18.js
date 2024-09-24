@@ -612,6 +612,124 @@ const hapusDosen = () => {
   });
 };
 
+// Mata Kuliah menu functions
+const matakuliahMenu = () => {
+  console.log(`\n${centerText("**Menu Mata Kuliah**")}`);
+  console.log("[1] Daftar Mata Kuliah");
+  console.log("[2] Cari Mata Kuliah");
+  console.log("[3] Tambah Mata Kuliah");
+  console.log("[4] Hapus Mata Kuliah");
+  console.log("[5] Kembali");
+
+  rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    switch (option) {
+      case "1":
+        daftarMatakuliah();
+        break;
+      case "2":
+        cariMatakuliah();
+        break;
+      case "3":
+        tambahMatakuliah();
+        break;
+      case "4":
+        hapusMatakuliah();
+        break;
+      case "5":
+        mainMenu();
+        break;
+      default:
+        console.log("Opsi tidak valid");
+        matakuliahMenu();
+    }
+  });
+};
+
+const daftarMatakuliah = () => {
+  query.matakuliah.getAll((matakuliahRows) => {
+    const tableMatakuliah = new Table({
+      head: ["Kode Mata Kuliah", "Nama Mata Kuliah","SKS"],
+      colWidths: [15, 30, 5],
+    });
+    matakuliahRows.forEach((row) => {
+      tableMatakuliah.push([row.id_matakuliah, row.nama, row.sks]);
+    });
+    console.log(tableMatakuliah.toString());
+    matakuliahMenu();
+  });
+};
+
+const cariMatakuliah = () => {
+  rl.question("Masukan Kode Mata Kuliah: ", (id_matakuliah) => {
+    query.matakuliah.getById(id_matakuliah, (row) => {
+      if (!row) {
+        console.log(`Kode Mata Kuliah '${id_matakuliah}', tidak terdaftar`);
+      } else {
+        console.log(`Detail Mata Kuliah dengan Kode '${id_matakuliah}':`);
+        console.log(`Kode Mata Kuliah      : ${row.id_matakuliah}`);
+        console.log(`Nama Mata Kuliah      : ${row.nama}`);
+        console.log(`SKS                   : ${row.sks}`);
+      }
+      matakuliahMenu();
+    });
+  });
+};
+
+const tambahMatakuliah = () => {
+  query.matakuliah.getAll((matakuliahRows) => {
+    const tableMatakuliah = new Table({
+      head: ["Kode Mata Kuliah", "Nama Mata Kuliah", "SKS"],
+      colWidths: [15, 30, 5],
+    });
+
+    matakuliahRows.forEach((row) => {
+      tableMatakuliah.push([row.id_matakuliah, row.nama]);
+    });
+    console.log(tableMatakuliah.toString());
+
+    rl.question("Kode Mata Kuliah: ", (id_matakuliah) => {
+      rl.question("Nama Mata Kuliah: ", (nama) => {
+        rl.question("SKS: ", (sks) => {
+          const validID = /^[A-Za-z0-9]+$/;
+          const validNama = /^[A-Za-z\s'.-]+$/;
+          const validSKS = /^\d+$/;
+
+          if (!validID.test(id_matakuliah)) {
+            console.log("Kode Mata Kuliah tidak valid.");
+            return tambahMatakuliah();
+          }
+          if (!validNama.test(nama)) {
+            console.log("Nama Mata Kuliah tidak valid.");
+            return tambahMatakuliah();
+          }
+          if (!validSKS.test(sks)) {
+            console.log("SKS tidak valid.");
+            return tambahMatakuliah();
+          }
+
+          query.matakuliah.add(id_matakuliah, nama, () => {
+            console.log("Mata Kuliah telah ditambahkan");
+            daftarMatakuliah();
+          });
+        });
+      });
+    });
+  });
+};
+
+const hapusMatakuliah = () => {
+  rl.question("Masukan Kode Mata Kuliah: ", (id_matakuliah) => {
+    query.matakuliah.delete(id_matakuliah, (changes) => {
+      if (changes === 0) {
+        console.log(`Mata Kuliah dengan Kode '${id_matakuliah}', tidak terdaftar`);
+      } else {
+        console.log(`Data Mata Kuliah '${id_matakuliah}', telah dihapus`);
+      }
+      matakuliahMenu();
+    });
+  });
+};
+
 // Application entry point
 const app = () => {
   console.log(
