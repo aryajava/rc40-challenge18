@@ -13,17 +13,17 @@ const rl = readline.createInterface({
 // QUERY LOGIN
 
 // Query untuk login
-function queryLogin(username, callback) {
+const queryLogin = (username, callback) => {
   db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
     if (err) throw err;
     callback(user);
   });
-}
+};
 
 // QUERY MAHASISWA
 
 // Query untuk menampilkan semua mahasiswa dengan join jurusan
-function queryTampilkanSemuaMahasiswa(callback) {
+const queryTampilkanSemuaMahasiswa = (callback) => {
   db.all(
     `SELECT m.nim, m.nama, m.tgllahir, m.alamat, j.id_jurusan, j.namajurusan
      FROM mahasiswa m
@@ -36,10 +36,10 @@ function queryTampilkanSemuaMahasiswa(callback) {
       callback(rows);
     }
   );
-}
+};
 
 // Query untuk mencari mahasiswa berdasarkan NIM
-function queryCariMahasiswa(nim, callback) {
+const queryCariMahasiswa = (nim, callback) => {
   db.get(
     `SELECT m.nim, m.nama, m.tgllahir, m.alamat, j.namajurusan
      FROM mahasiswa m
@@ -51,10 +51,10 @@ function queryCariMahasiswa(nim, callback) {
       callback(row);
     }
   );
-}
+};
 
 // Query untuk menambah mahasiswa
-function queryTambahMahasiswa(nim, nama, tgllahir, alamat, id_jurusan, callback) {
+const queryTambahMahasiswa = (nim, nama, tgllahir, alamat, id_jurusan, callback) => {
   db.run(
     `INSERT INTO mahasiswa (nim, nama, tgllahir, alamat, id_jurusan)
      VALUES (?, ?, ?, ?, ?)`,
@@ -64,28 +64,28 @@ function queryTambahMahasiswa(nim, nama, tgllahir, alamat, id_jurusan, callback)
       callback();
     }
   );
-}
+};
 
 // Query untuk menghapus mahasiswa berdasarkan NIM
-function queryHapusMahasiswa(nim, callback) {
+const queryHapusMahasiswa = (nim, callback) => {
   db.run("DELETE FROM mahasiswa WHERE nim = ?", [nim], function (err) {
     if (err) throw err;
     callback(this.changes);
   });
-}
+};
 
 // QUERY JURUSAN
 
 // Query untuk select semua jurusan
-function queryTampilkanSemuaJurusan(callback) {
+const queryTampilkanSemuaJurusan = (callback) => {
   db.all("SELECT * FROM jurusan", (err, rows) => {
     if (err) throw err;
     callback(rows);
   });
-}
+};
 
 // Query untuk mencari jurusan berdasarkan Kode Jurusan
-function queryCariJurusan(id_jurusan, callback) {
+const queryCariJurusan = (id_jurusan, callback) => {
   db.get(
     `SELECT *
      FROM jurusan
@@ -96,10 +96,10 @@ function queryCariJurusan(id_jurusan, callback) {
       callback(row);
     }
   );
-}
+};
 
 // Query untuk menambah jurusan
-function queryTambahJurusan(id_jurusan, namajurusan, callback) {
+const queryTambahJurusan = (id_jurusan, namajurusan, callback) => {
   db.run(
     `INSERT INTO jurusan (id_jurusan, namajurusan)
      VALUES (?, ?)`,
@@ -109,15 +109,15 @@ function queryTambahJurusan(id_jurusan, namajurusan, callback) {
       callback();
     }
   );
-}
+};
 
 // Query untuk menghapus jurusan berdasarkan Kode Jurusan
-function queryHapusJurusan(id_jurusan, callback) {
+const queryHapusJurusan = (id_jurusan, callback) => {
   db.run("DELETE FROM jurusan WHERE id_jurusan = ?", [id_jurusan], function (err) {
     if (err) throw err;
     callback(this.changes);
   });
-}
+};
 
 // OTHERS
 
@@ -127,7 +127,7 @@ const sparator = (sep = "=", length = 50) => {
 };
 
 // Fungsi untuk text center
-function centerText(title, length = 50) {
+const centerText = (title, length = 50) => {
   const targetLength = length;
   const paddingLength = Math.max(0, targetLength - title.length);
   const leftPadding = Math.floor(paddingLength / 2);
@@ -135,10 +135,10 @@ function centerText(title, length = 50) {
 
   const centeredTitle = " ".repeat(leftPadding) + title + " ".repeat(rightPadding);
   return centeredTitle;
-}
+};
 
 // Fungsi login
-function login() {
+const login = () => {
   rl.question("Username: ", (username) => {
     queryLogin(username, (user) => {
       if (!user) {
@@ -161,10 +161,10 @@ function login() {
       }
     });
   });
-}
+};
 
 // Fungsi untuk menampilkan menu utama
-function mainMenu() {
+const mainMenu = () => {
   console.log(`\n${centerText("*Menu Utama*")}`);
   console.log("[1] Mahasiswa");
   console.log("[2] Jurusan");
@@ -191,12 +191,12 @@ function mainMenu() {
         mainMenu();
     }
   });
-}
+};
 
 // MAHASISWA
 
 // Fungsi untuk menu mahasiswa
-function mahasiswaMenu() {
+const mahasiswaMenu = () => {
   console.log(`\n${centerText("**Menu Mahasiswa**")}`);
   console.log("[1] Daftar Mahasiswa");
   console.log("[2] Cari Mahasiswa");
@@ -229,10 +229,10 @@ function mahasiswaMenu() {
         mahasiswaMenu();
     }
   });
-}
+};
 
 // Fungsi untuk daftar mahasiswa
-function daftarMahasiswa() {
+const daftarMahasiswa = () => {
   queryTampilkanSemuaMahasiswa((rows) => {
     const table = new Table({
       head: ["NIM", "Nama", "Tanggal Lahir", "Alamat", "Kode Jurusan", "Nama Jurusan"],
@@ -246,10 +246,10 @@ function daftarMahasiswa() {
     console.log(table.toString());
     mahasiswaMenu();
   });
-}
+};
 
 // Fungsi untuk mencari mahasiswa berdasarkan NIM
-function cariMahasiswa() {
+const cariMahasiswa = () => {
   rl.question("Masukan NIM Mahasiswa: ", (nim) => {
     queryCariMahasiswa(nim, (row) => {
       if (!row) {
@@ -265,10 +265,10 @@ function cariMahasiswa() {
       mahasiswaMenu();
     });
   });
-}
+};
 
 // Fungsi untuk menambah mahasiswa
-function tambahMahasiswa() {
+const tambahMahasiswa = () => {
   queryTampilkanSemuaMahasiswa((mahasiswaRows) => {
     const tableMahasiswa = new Table({
       head: ["NIM", "Nama", "Tanggal Lahir", "Alamat", "Kode Jurusan", "Nama Jurusan"],
@@ -340,10 +340,10 @@ function tambahMahasiswa() {
       });
     });
   });
-}
+};
 
 // Fungsi untuk menghapus mahasiswa
-function hapusMahasiswa() {
+const hapusMahasiswa = () => {
   rl.question("Masukan NIM Mahasiswa: ", (nim) => {
     queryHapusMahasiswa(nim, (changes) => {
       if (changes === 0) {
@@ -354,12 +354,12 @@ function hapusMahasiswa() {
       mahasiswaMenu();
     });
   });
-}
+};
 
 // JURUSAN
 
 // Fungsi untuk menu jurusan
-function jurusanMenu() {
+const jurusanMenu = () => {
   console.log(`\n${centerText("**Menu Jurusan**")}`);
   console.log("[1] Daftar Jurusan");
   console.log("[2] Cari Jurusan");
@@ -392,10 +392,10 @@ function jurusanMenu() {
         mahasiswaMenu();
     }
   });
-}
+};
 
 // Fungsi untuk daftar jurusan
-function daftarJurusan() {
+const daftarJurusan = () => {
   queryTampilkanSemuaJurusan((jurusanRows) => {
     const tableJurusan = new Table({
       head: ["Kode Jurusan", "Nama Jurusan"],
@@ -407,10 +407,10 @@ function daftarJurusan() {
     console.log(tableJurusan.toString());
     jurusanMenu();
   });
-}
+};
 
 // Fungsi untuk mencari jurusan berdasarkan Kode Jurusan
-function cariJurusan() {
+const cariJurusan = () => {
   rl.question("Masukan Kode Jurusan: ", (id_jurusan) => {
     queryCariJurusan(id_jurusan, (row) => {
       if (!row) {
@@ -423,10 +423,10 @@ function cariJurusan() {
       jurusanMenu();
     });
   });
-}
+};
 
 // Fungsi untuk menambah jurusan
-function tambahJurusan() {
+const tambahJurusan = () => {
   queryTampilkanSemuaJurusan((jurusanRows) => {
     const tableJurusan = new Table({
       head: ["Kode Jurusan", "Nama Jurusan"],
@@ -458,10 +458,10 @@ function tambahJurusan() {
       });
     });
   });
-}
+};
 
 // Fungsi untuk menghapus jurusan
-function hapusJurusan() {
+const hapusJurusan = () => {
   rl.question("Masukan Kode Jurusan: ", (id_jurusan) => {
     queryHapusJurusan(id_jurusan, (changes) => {
       if (changes === 0) {
@@ -472,7 +472,7 @@ function hapusJurusan() {
       jurusanMenu();
     });
   });
-}
+};
 
 const app = () => {
   console.log(
