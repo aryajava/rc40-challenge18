@@ -77,14 +77,10 @@ const query = {
       });
     },
     getById: (id_jurusan, callback) => {
-      db.get(
-        `SELECT * FROM jurusan WHERE id_jurusan = ?`,
-        [id_jurusan],
-        (err, row) => {
-          if (err) throw err;
-          callback(row);
-        }
-      );
+      db.get(`SELECT * FROM jurusan WHERE id_jurusan = ?`, [id_jurusan], (err, row) => {
+        if (err) throw err;
+        callback(row);
+      });
     },
     add: (id_jurusan, namajurusan, callback) => {
       db.run(
@@ -111,24 +107,16 @@ const query = {
       });
     },
     getById: (id_dosen, callback) => {
-      db.get(
-        `SELECT * FROM dosen WHERE id_dosen = ?`,
-        [id_dosen],
-        (err, row) => {
-          if (err) throw err;
-          callback(row);
-        }
-      );
+      db.get(`SELECT * FROM dosen WHERE id_dosen = ?`, [id_dosen], (err, row) => {
+        if (err) throw err;
+        callback(row);
+      });
     },
     add: (id_dosen, nama, callback) => {
-      db.run(
-        `INSERT INTO dosen (id_dosen, nama) VALUES (?, ?)`,
-        [id_dosen, nama],
-        (err) => {
-          if (err) throw err;
-          callback();
-        }
-      );
+      db.run(`INSERT INTO dosen (id_dosen, nama) VALUES (?, ?)`, [id_dosen, nama], (err) => {
+        if (err) throw err;
+        callback();
+      });
     },
     delete: (id_dosen, callback) => {
       db.run("DELETE FROM dosen WHERE id_dosen = ?", [id_dosen], function (err) {
@@ -145,18 +133,14 @@ const query = {
       });
     },
     getById: (id_matakuliah, callback) => {
-      db.get(
-        `SELECT * FROM matakuliah WHERE id_matakuliah = ?`,
-        [id_matakuliah],
-        (err, row) => {
-          if (err) throw err;
-          callback(row);
-        }
-      );
+      db.get(`SELECT * FROM matakuliah WHERE id_matakuliah = ?`, [id_matakuliah], (err, row) => {
+        if (err) throw err;
+        callback(row);
+      });
     },
     add: (id_matakuliah, nama, sks, callback) => {
       db.run(
-        `INSERT INTO matakuliah (id_matakuliah, nama, sks) VALUES (?, ?)`,
+        `INSERT INTO matakuliah (id_matakuliah, nama, sks) VALUES (?, ?, ?)`,
         [id_matakuliah, nama, sks],
         (err) => {
           if (err) throw err;
@@ -171,7 +155,6 @@ const query = {
       });
     },
   },
-  
 };
 
 // Login function
@@ -218,11 +201,11 @@ const mainMenu = () => {
         jurusanMenu();
         break;
       case "3":
-        dosenMenu()
+        dosenMenu();
         break;
-      // case "4":
-      //   matakuliahMenu();
-      //   break;
+      case "4":
+        matakuliahMenu();
+        break;
       // case "5":
       //   kontrakMenu();
       //   break;
@@ -648,7 +631,7 @@ const matakuliahMenu = () => {
 const daftarMatakuliah = () => {
   query.matakuliah.getAll((matakuliahRows) => {
     const tableMatakuliah = new Table({
-      head: ["Kode Mata Kuliah", "Nama Mata Kuliah","SKS"],
+      head: ["Kode Mata Kuliah", "Nama Mata Kuliah", "SKS"],
       colWidths: [15, 30, 5],
     });
     matakuliahRows.forEach((row) => {
@@ -683,7 +666,7 @@ const tambahMatakuliah = () => {
     });
 
     matakuliahRows.forEach((row) => {
-      tableMatakuliah.push([row.id_matakuliah, row.nama]);
+      tableMatakuliah.push([row.id_matakuliah, row.nama, row.sks]);
     });
     console.log(tableMatakuliah.toString());
 
@@ -691,7 +674,7 @@ const tambahMatakuliah = () => {
       rl.question("Nama Mata Kuliah: ", (nama) => {
         rl.question("SKS: ", (sks) => {
           const validID = /^[A-Za-z0-9]+$/;
-          const validNama = /^[A-Za-z\s'.-]+$/;
+          const validNama = /^[A-Za-z0-9\s'.-]+$/;
           const validSKS = /^\d+$/;
 
           if (!validID.test(id_matakuliah)) {
@@ -707,7 +690,7 @@ const tambahMatakuliah = () => {
             return tambahMatakuliah();
           }
 
-          query.matakuliah.add(id_matakuliah, nama, () => {
+          query.matakuliah.add(id_matakuliah, nama, sks, () => {
             console.log("Mata Kuliah telah ditambahkan");
             daftarMatakuliah();
           });
