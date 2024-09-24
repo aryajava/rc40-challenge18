@@ -155,6 +155,65 @@ const query = {
       });
     },
   },
+  kontrakMatakuliah: {
+    getAll: (callback) => {
+      db.all(
+        `SELECT nm.id_nilai, nm.nim, m.nama AS nama_mahasiswa, mk.nama AS nama_matakuliah, d.nama AS nama_dosen, nm.nilai
+       FROM nilai_mahasiswa nm
+       JOIN mahasiswa m ON nm.nim = m.nim
+       JOIN matakuliah mk ON nm.id_matakuliah = mk.id_matakuliah
+       JOIN dosen d ON nm.id_dosen = d.id_dosen`,
+        (err, rows) => {
+          if (err) throw err;
+          callback(rows);
+        }
+      );
+    },
+    getById: (nim, callback) => {
+      db.get(
+        `SELECT nm.id_nilai, nm.nim, nm.id_matakuliah, nm.id_dosen, nm.nilai
+         FROM nilai_mahasiswa nm
+         WHERE nm.nim = ?`,
+        [nim],
+        (err, row) => {
+          if (err) throw err;
+          callback(row);
+        }
+      );
+    },
+    add: (nim, id_matakuliah, id_dosen, nilai, callback) => {
+      db.run(
+        `INSERT INTO nilai_mahasiswa (nim, id_matakuliah, id_dosen, nilai) VALUES (?, ?, ?, ?)`,
+        [nim, id_matakuliah, id_dosen, nilai],
+        (err) => {
+          if (err) throw err;
+          callback();
+        }
+      );
+    },
+    update: (id_nilai, nim, id_matakuliah, id_dosen, nilai, callback) => {
+      db.run(
+        `UPDATE nilai_mahasiswa 
+       SET nim = ?, id_matakuliah = ?, id_dosen = ?, nilai = ? 
+       WHERE id_nilai = ?`,
+        [nim, id_matakuliah, id_dosen, nilai, id_nilai],
+        function (err) {
+          if (err) throw err;
+          callback(this.changes);
+        }
+      );
+    },
+    delete: (id_nilai, callback) => {
+      db.run(
+        "DELETE FROM nilai_mahasiswa WHERE id_nilai = ?",
+        [id_nilai],
+        function (err) {
+          if (err) throw err;
+          callback(this.changes);
+        }
+      );
+    },
+  },
 };
 
 // Login function
@@ -206,9 +265,9 @@ const mainMenu = () => {
       case "4":
         matakuliahMenu();
         break;
-      // case "5":
-      //   kontrakMenu();
-      //   break;
+      case "5":
+        kontrakMenu();
+        break;
       case "6":
         console.log("Keluar...");
         db.close();
