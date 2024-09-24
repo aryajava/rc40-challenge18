@@ -493,6 +493,116 @@ const hapusJurusan = () => {
   });
 };
 
+// Dosen menu functions
+const dosenMenu = () => {
+  console.log(`\n${centerText("**Menu Dosen**")}`);
+  console.log("[1] Daftar Dosen");
+  console.log("[2] Cari Dosen");
+  console.log("[3] Tambah Dosen");
+  console.log("[4] Hapus Dosen");
+  console.log("[5] Kembali");
+
+  rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    switch (option) {
+      case "1":
+        daftarDosen();
+        break;
+      case "2":
+        cariDosen();
+        break;
+      case "3":
+        tambahDosen();
+        break;
+      case "4":
+        hapusDosen();
+        break;
+      case "5":
+        mainMenu();
+        break;
+      default:
+        console.log("Opsi tidak valid");
+        dosenMenu();
+    }
+  });
+};
+
+const daftarDosen = () => {
+  query.dosen.getAll((dosenRows) => {
+    const tableDosen = new Table({
+      head: ["Kode Dosen", "Nama Dosen"],
+      colWidths: [15, 30],
+    });
+    dosenRows.forEach((row) => {
+      tableDosen.push([row.id_dosen, row.nama]);
+    });
+    console.log(tableDosen.toString());
+    dosenMenu();
+  });
+};
+
+const cariDosen = () => {
+  rl.question("Masukan Kode Dosen: ", (id_dosen) => {
+    query.dosen.getById(id_dosen, (row) => {
+      if (!row) {
+        console.log(`Kode Dosen '${id_dosen}', tidak terdaftar`);
+      } else {
+        console.log(`Detail Dosen dengan Kode '${id_dosen}':`);
+        console.log(`Kode Dosen      : ${row.id_dosen}`);
+        console.log(`Nama Dosen      : ${row.nama}`);
+      }
+      dosenMenu();
+    });
+  });
+};
+
+const tambahDosen = () => {
+  query.dosen.getAll((dosenRows) => {
+    const tableDosen = new Table({
+      head: ["Kode Dosen", "Nama Dosen"],
+      colWidths: [15, 30],
+    });
+
+    dosenRows.forEach((row) => {
+      tableDosen.push([row.id_dosen, row.nama]);
+    });
+    console.log(tableDosen.toString());
+
+    rl.question("Kode Dosen: ", (id_dosen) => {
+      rl.question("Nama Dosen: ", (nama) => {
+        const validID = /^[A-Za-z0-9]+$/;
+        const validNama = /^[A-Za-z0-9\s]+$/;
+
+        if (!validID.test(id_dosen)) {
+          console.log("Kode Dosen tidak valid.");
+          return tambahDosen();
+        }
+        if (!validNama.test(nama)) {
+          console.log("Nama Dosen tidak valid.");
+          return tambahDosen();
+        }
+
+        query.dosen.add(id_dosen, nama, () => {
+          console.log("Dosen telah ditambahkan");
+          daftarDosen();
+        });
+      });
+    });
+  });
+};
+
+const hapusDosen = () => {
+  rl.question("Masukan Kode Dosen: ", (id_dosen) => {
+    query.dosen.delete(id_dosen, (changes) => {
+      if (changes === 0) {
+        console.log(`Dosen dengan Kode '${id_dosen}', tidak terdaftar`);
+      } else {
+        console.log(`Data Dosen '${id_dosen}', telah dihapus`);
+      }
+      dosenMenu();
+    });
+  });
+};
+
 // Application entry point
 const app = () => {
   console.log(
