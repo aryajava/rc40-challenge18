@@ -159,7 +159,7 @@ const query = {
     getAll: (callback) => {
       db.all(
         `SELECT nm.id_nilai, nm.nim, m.nama AS nama_mahasiswa, mk.nama AS nama_matakuliah, d.nama AS nama_dosen, nm.nilai
-       FROM nilai_mahasiswa nm
+      FROM nilai_mahasiswa nm
        JOIN mahasiswa m ON nm.nim = m.nim
        JOIN matakuliah mk ON nm.id_matakuliah = mk.id_matakuliah
        JOIN dosen d ON nm.id_dosen = d.id_dosen`,
@@ -170,14 +170,14 @@ const query = {
       );
     },
     getById: (nim, callback) => {
-      db.get(
+      db.all(
         `SELECT nm.id_nilai, nm.nim, nm.id_matakuliah, nm.id_dosen, nm.nilai
          FROM nilai_mahasiswa nm
          WHERE nm.nim = ?`,
         [nim],
-        (err, row) => {
+        (err, rows) => {
           if (err) throw err;
-          callback(row);
+          callback(rows);
         }
       );
     },
@@ -689,6 +689,7 @@ const daftarMatakuliah = () => {
       head: ["Kode Mata Kuliah", "Nama Mata Kuliah", "SKS"],
       colWidths: [15, 30, 5],
     });
+    
     matakuliahRows.forEach((row) => {
       tableMatakuliah.push([row.id_matakuliah, row.nama, row.sks]);
     });
@@ -813,7 +814,14 @@ const daftarKontrak = () => {
     });
 
     rows.forEach((row) => {
-      table.push([row.id_nilai, row.nim, row.nama_mahasiswa, row.nama_matakuliah, row.nama_dosen, row.nilai]);
+      table.push([
+        row.id_nilai,
+        row.nim,
+        row.nama_mahasiswa,
+        row.nama_matakuliah,
+        row.nama_dosen,
+        row.nilai,
+      ]);
     });
 
     console.log(table.toString());
@@ -821,6 +829,129 @@ const daftarKontrak = () => {
   });
 };
 
+const cariKontrak = () => {
+  query.mahasiswa.getAll((rows) => {
+    const table = new Table({
+      head: ["NIM", "Nama", "Tanggal Lahir", "Alamat", "Kode Jurusan", "Nama Jurusan"],
+      colWidths: [10, 25, 15, 30, 15, 30],
+    });
+
+    rows.forEach((row) => {
+      table.push([row.nim, row.nama, row.tgllahir, row.alamat, row.id_jurusan, row.namajurusan]);
+    });
+
+    console.log(table.toString());
+
+    rl.question("Masukan NIM Mahasiswa: ", (nim) => {
+      query.kontrak.getById(nim, (rows) => {
+        if (!rows) {
+          console.log(`NIM'${nim}', tidak terdaftar`);
+        } else {
+          console.log(`Daftar kontrak mahasiswa dengan NIM '${nim}' adalah:`);
+
+          const table = new Table({
+            head: ["ID", "NIM", "Kode Matakuliah", "Kode Dosen", "Nilai"],
+            colWidths: [5, 10, 20, 15, 10],
+          });
+          
+          rows.forEach((row) => {
+            table.push([row.id_nilai, row.nim, row.id_matakuliah, row.id_dosen, row.nilai]);
+          });
+      
+          console.log(table.toString());
+        }
+        kontrakMenu();
+      });
+    });
+  });
+};
+
+// const tambahKontrak = () => {
+//   query.mahasiswa.getAll((mahasiswaRows) => {
+//     const tableMahasiswa = new Table({
+//       head: ["NIM", "Nama", "Tanggal Lahir", "Alamat", "Kode Jurusan", "Nama Jurusan"],
+//       colWidths: [10, 25, 15, 30, 15, 30],
+//     });
+
+//     mahasiswaRows.forEach((row) => {
+//       tableMahasiswa.push([
+//         row.nim,
+//         row.nama,
+//         row.tgllahir,
+//         row.alamat,
+//         row.id_jurusan,
+//         row.namajurusan,
+//       ]);
+//     });
+//     console.log(tableMahasiswa.toString());
+
+//     rl.question("NIM: ", (nim) => {
+//       rl.question("Nama: ", (nama) => {
+//         rl.question("Tanggal Lahir (YYYY-MM-DD): ", (tgllahir) => {
+//           rl.question("Alamat: ", (alamat) => {
+//             const validNIM = /^\d+$/;
+//             const validNama = /^[A-Za-z\s'.-]+$/;
+//             const validTgl = /^\d{4}-\d{2}-\d{2}$/;
+//             const validAlamat = /.+/;
+
+//             if (!validNIM.test(nim)) {
+//               console.log("NIM tidak valid.");
+//               return tambahMahasiswa();
+//             }
+//             if (!validNama.test(nama)) {
+//               console.log("Nama tidak valid.");
+//               return tambahMahasiswa();
+//             }
+//             if (!validTgl.test(tgllahir)) {
+//               console.log("Tanggal Lahir tidak valid. Harap gunakan format YYYY-MM-DD.");
+//               return tambahMahasiswa();
+//             }
+//             if (!validAlamat.test(alamat)) {
+//               console.log("Alamat tidak valid.");
+//               return tambahMahasiswa();
+//             }
+
+//             query.jurusan.getAll((jurusanRows) => {
+//               const tableJurusan = new Table({
+//                 head: ["Kode Jurusan", "Nama Jurusan"],
+//                 colWidths: [15, 30],
+//               });
+//               jurusanRows.forEach((row) => {
+//                 tableJurusan.push([row.id_jurusan, row.namajurusan]);
+//               });
+//               console.log(tableJurusan.toString());
+
+//               rl.question("Kode Jurusan: ", (id_jurusan) => {
+//                 const validJurusan = jurusanRows.find((j) => j.id_jurusan === id_jurusan);
+//                 if (!validJurusan) {
+//                   console.log("Kode Jurusan tidak valid, coba lagi.");
+//                   return tambahMahasiswa();
+//                 }
+//                 query.mahasiswa.add(nim, nama, tgllahir, alamat, id_jurusan, () => {
+//                   console.log("Mahasiswa telah ditambahkan");
+//                   daftarMahasiswa();
+//                 });
+//               });
+//             });
+//           });
+//         });
+//       });
+//     });
+//   });
+// };
+
+// const hapusMahasiswa = () => {
+//   rl.question("Masukan NIM Mahasiswa: ", (nim) => {
+//     query.mahasiswa.delete(nim, (changes) => {
+//       if (changes === 0) {
+//         console.log(`Mahasiswa dengan NIM '${nim}', tidak terdaftar`);
+//       } else {
+//         console.log(`Data Mahasiswa '${nim}', telah dihapus`);
+//       }
+//       mahasiswaMenu();
+//     });
+//   });
+// };
 
 // Application entry point
 const app = () => {
