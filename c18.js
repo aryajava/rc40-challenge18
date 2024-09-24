@@ -217,6 +217,15 @@ const mainMenu = () => {
       case "2":
         jurusanMenu();
         break;
+      case "3":
+        dosenMenu()
+        break;
+      // case "4":
+      //   matakuliahMenu();
+      //   break;
+      // case "5":
+      //   kontrakMenu();
+      //   break;
       case "6":
         console.log("Keluar...");
         db.close();
@@ -320,7 +329,7 @@ const tambahMahasiswa = () => {
         rl.question("Tanggal Lahir (YYYY-MM-DD): ", (tgllahir) => {
           rl.question("Alamat: ", (alamat) => {
             const validNIM = /^\d+$/;
-            const validNama = /^[A-Za-z\s]+$/;
+            const validNama = /^[A-Za-z\s'.-]+$/;
             const validTgl = /^\d{4}-\d{2}-\d{2}$/;
             const validAlamat = /.+/;
 
@@ -570,7 +579,7 @@ const tambahDosen = () => {
     rl.question("Kode Dosen: ", (id_dosen) => {
       rl.question("Nama Dosen: ", (nama) => {
         const validID = /^[A-Za-z0-9]+$/;
-        const validNama = /^[A-Za-z0-9\s]+$/;
+        const validNama = /^[A-Za-z\s'.-]+$/;
 
         if (!validID.test(id_dosen)) {
           console.log("Kode Dosen tidak valid.");
