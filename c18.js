@@ -961,7 +961,6 @@ const hapusKontrak = () => {
   });
 };
 
-// UpdateNilai
 const updateNilai = () => {
   query.kontrak.getAll((rows) => {
     const table = new Table({
@@ -1028,7 +1027,7 @@ const updateNilai = () => {
   });
 };
 
-// Application entry point
+
 const app = () => {
   console.log(
     `${sparator()}\n${centerText("Welcome to Universitas Pendidikan Indonesia")}\n${centerText(
