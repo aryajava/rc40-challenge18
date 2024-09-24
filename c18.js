@@ -155,7 +155,7 @@ const query = {
       });
     },
   },
-  kontrakMatakuliah: {
+  kontrak: {
     getAll: (callback) => {
       db.all(
         `SELECT nm.id_nilai, nm.nim, m.nama AS nama_mahasiswa, mk.nama AS nama_matakuliah, d.nama AS nama_dosen, nm.nilai
@@ -204,14 +204,10 @@ const query = {
       );
     },
     delete: (id_nilai, callback) => {
-      db.run(
-        "DELETE FROM nilai_mahasiswa WHERE id_nilai = ?",
-        [id_nilai],
-        function (err) {
-          if (err) throw err;
-          callback(this.changes);
-        }
-      );
+      db.run("DELETE FROM nilai_mahasiswa WHERE id_nilai = ?", [id_nilai], function (err) {
+        if (err) throw err;
+        callback(this.changes);
+      });
     },
   },
 };
@@ -771,6 +767,60 @@ const hapusMatakuliah = () => {
     });
   });
 };
+
+// Kontrak menu functions
+const kontrakMenu = () => {
+  console.log(`\n${centerText("**Menu Kontrak**")}`);
+  console.log("[1] Daftar Kontrak");
+  console.log("[2] Cari Kontrak");
+  console.log("[3] Tambah Kontrak");
+  console.log("[4] Hapus Kontrak");
+  console.log("[5] Update Nilai");
+  console.log("[6] Kembali");
+
+  rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    switch (option) {
+      case "1":
+        daftarKontrak();
+        break;
+      case "2":
+        cariKontrak();
+        break;
+      case "3":
+        tambahKontrak();
+        break;
+      case "4":
+        hapusKontrak();
+        break;
+      case "5":
+        updateNilai();
+        break;
+      case "6":
+        mainMenu();
+        break;
+      default:
+        console.log("Opsi tidak valid");
+        kontrakMenu();
+    }
+  });
+};
+
+const daftarKontrak = () => {
+  query.kontrak.getAll((rows) => {
+    const table = new Table({
+      head: ["ID", "NIM", "Nama", "Mata Kuliah", "Dosen", "Nilai"],
+      colWidths: [5, 10, 30, 30, 30, 10],
+    });
+
+    rows.forEach((row) => {
+      table.push([row.id_nilai, row.nim, row.nama_mahasiswa, row.nama_matakuliah, row.nama_dosen, row.nilai]);
+    });
+
+    console.log(table.toString());
+    kontrakMenu();
+  });
+};
+
 
 // Application entry point
 const app = () => {
