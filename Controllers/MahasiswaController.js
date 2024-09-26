@@ -97,11 +97,10 @@ export const MahasiswaController = {
       MahasiswaModel.delete(nim, (changes) => {
         if (changes > 0) {
           MahasiswaView.printMahasiswaDeleted(nim);
-          MahasiswaController.menuMahasiswa(rl);
         } else {
           MahasiswaView.printMahasiswaNotFound(nim);
-          MahasiswaController.menuMahasiswa(rl);
         }
+        MahasiswaController.menuMahasiswa(rl);
       });
     });
   },

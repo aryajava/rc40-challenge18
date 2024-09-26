@@ -5,7 +5,7 @@ import { MainMenuController } from "./MainMenuController.js";
 export const LoginController = {
   login: (rl) => {
     LoginView.promptUsername(rl, (username) => {
-        UserModel.login(username, (user) => {
+      UserModel.login(username, (user) => {
         if (!user) {
           LoginView.showLoginFailure("Username tidak terdaftar");
           return LoginController.login(rl);

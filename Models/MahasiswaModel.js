@@ -3,7 +3,7 @@ import { db } from "./Utils/DB.js";
 export class MahasiswaModel {
   static getAll(callback) {
     db.all(
-       `SELECT m.nim, m.nama, m.tgllahir, m.alamat, j.id_jurusan, j.namajurusan 
+      `SELECT m.nim, m.nama, m.tgllahir, m.alamat, j.id_jurusan, j.namajurusan 
         FROM mahasiswa m
         JOIN jurusan j ON m.id_jurusan = j.id_jurusan`,
       (err, rows) => {

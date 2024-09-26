@@ -76,11 +76,10 @@ export const JurusanController = {
       JurusanModel.delete(id, (changes) => {
         if (changes > 0) {
           JurusanView.printJurusanDeleted(id);
-          JurusanController.menuJurusan(rl);
         } else {
           JurusanView.printJurusanNotFound(id);
-          JurusanController.menuJurusan(rl);
         }
+        JurusanController.menuJurusan(rl);
       });
     });
   },
