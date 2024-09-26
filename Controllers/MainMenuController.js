@@ -1,8 +1,9 @@
-import { MainMenuView } from "../Views/MainMenuView.js";
 import { db } from "../Models/Utils/DB.js";
-import { MahasiswaController } from "./MahasiswaController.js";
-import { JurusanController } from "./JurusanController.js";
+import { MainMenuView } from "../Views/MainMenuView.js";
 import { DosenController } from "./DosenController.js";
+import { JurusanController } from "./JurusanController.js";
+import { MahasiswaController } from "./MahasiswaController.js";
+import { MatakuliahController } from "./MatakuliahController.js";
 
 export const MainMenuController = {
   mainMenu: (rl) => {
@@ -18,10 +19,9 @@ export const MainMenuController = {
         case "3":
           DosenController.menuDosen(rl);
           break;
-        // case "4":
-        //   // Matakuliah
-        //   hapusMahasiswa();
-        //   break;
+        case "4":
+          MatakuliahController.menuMatakuliah(rl);
+          break;
         // case "5":
         //   // Kontrak
         //   MainMenuController.mainMenu(rl);

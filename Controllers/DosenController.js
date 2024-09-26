@@ -31,7 +31,7 @@ export const DosenController = {
   getAllDosen: (rl) => {
     DosenModel.getAll((rows) => {
       DosenView.printDosen(rows);
-      DosenController.menuDosen(rl);
+      return DosenController.menuDosen(rl);
     });
   },
   cariDosen: (rl) => {
@@ -43,7 +43,7 @@ export const DosenController = {
         } else {
           DosenView.printDosenNotFound(id);
         }
-        DosenController.menuDosen(rl);
+        return DosenController.menuDosen(rl);
       });
     });
   },
@@ -55,19 +55,17 @@ export const DosenController = {
         const validID = /^[A-Za-z0-9]+$/;
         if (!validID.test(id)) {
           DosenView.printInvalidInput();
-          DosenController.menuDosen(rl);
+          return DosenController.menuDosen(rl);
         }
-
         rl.question("Masukan Nama Dosen: ", (nama) => {
           const validNama = /^[A-Za-z\s'.-]+$/;
           if (!validNama.test(nama)) {
             DosenView.printInvalidInput();
-            console.log("Nama Dosen tidak valid.");
-            DosenController.menuDosen(rl);
+            return DosenController.menuDosen(rl);
           }
           DosenModel.add(id, nama, () => {
             DosenView.printDosenAdded(id);
-            DosenController.menuDosen(rl);
+            return DosenController.menuDosen(rl);
           });
         });
       });
@@ -81,7 +79,7 @@ export const DosenController = {
         } else {
           DosenView.printDosenNotFound(id);
         }
-        DosenController.menuDosen(rl);
+        return DosenController.menuDosen(rl);
       });
     });
   },

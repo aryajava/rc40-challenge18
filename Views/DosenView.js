@@ -21,8 +21,8 @@ export const DosenView = {
     console.log(table.toString());
   },
   printDosenDetail: (row) => {
-    console.log(`ID Dosen: ${row.id_dosen}`);
-    console.log(`Nama Dosen: ${row.nama}`);
+    console.log(`ID Dosen   : ${row.id_dosen}`);
+    console.log(`Nama Dosen : ${row.nama}`);
   },
   printDosenAdded: (id) => {
     console.log(`Dosen dengan ID '${id}' berhasil ditambahkan`);

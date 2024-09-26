@@ -21,8 +21,8 @@ export const JurusanView = {
     console.log(table.toString());
   },
   printJurusanDetail: (row) => {
-    console.log(`ID Jurusan: ${row.id_jurusan}`);
-    console.log(`Nama Jurusan: ${row.namajurusan}`);
+    console.log(`ID Jurusan   : ${row.id_jurusan}`);
+    console.log(`Nama Jurusan : ${row.namajurusan}`);
   },
   printJurusanAdded: (id) => {
     console.log(`Jurusan dengan ID '${id}' berhasil ditambahkan`);

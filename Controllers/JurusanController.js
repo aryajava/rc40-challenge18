@@ -31,7 +31,7 @@ export const JurusanController = {
   getAllJurusan: (rl) => {
     JurusanModel.getAll((rows) => {
       JurusanView.printJurusan(rows);
-      JurusanController.menuJurusan(rl);
+      return JurusanController.menuJurusan(rl);
     });
   },
   cariJurusan: (rl) => {
@@ -43,7 +43,7 @@ export const JurusanController = {
         } else {
           JurusanView.printJurusanNotFound(id);
         }
-        JurusanController.menuJurusan(rl);
+        return JurusanController.menuJurusan(rl);
       });
     });
   },
@@ -55,17 +55,17 @@ export const JurusanController = {
         const validID = /^[A-Za-z0-9]+$/;
         if (!validID.test(id)) {
           JurusanView.printInvalidInput();
-          JurusanController.menuJurusan(rl);
+          return JurusanController.menuJurusan(rl);
         }
         rl.question("Nama Jurusan: ", (nama) => {
           const validNama = /^[A-Za-z0-9\s]+$/;
           if (!validNama.test(nama)) {
             JurusanView.printInvalidInput();
-            JurusanController.menuJurusan(rl);
+            return JurusanController.menuJurusan(rl);
           }
           JurusanModel.add(id, nama, () => {
             JurusanView.printJurusanAdded(id);
-            JurusanController.menuJurusan(rl);
+            return JurusanController.menuJurusan(rl);
           });
         });
       });
@@ -79,7 +79,7 @@ export const JurusanController = {
         } else {
           JurusanView.printJurusanNotFound(id);
         }
-        JurusanController.menuJurusan(rl);
+        return JurusanController.menuJurusan(rl);
       });
     });
   },

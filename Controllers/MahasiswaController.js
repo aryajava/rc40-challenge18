@@ -33,7 +33,7 @@ export const MahasiswaController = {
   getAllMahasiswa: (rl) => {
     MahasiswaModel.getAll((rows) => {
       MahasiswaView.printMahasiswa(rows);
-      MahasiswaController.menuMahasiswa(rl);
+      return MahasiswaController.menuMahasiswa(rl);
     });
   },
   cariMahasiswa: (rl) => {
@@ -45,7 +45,7 @@ export const MahasiswaController = {
         } else {
           MahasiswaView.printMahasiswaNotFound(nim);
         }
-        MahasiswaController.menuMahasiswa(rl);
+        return MahasiswaController.menuMahasiswa(rl);
       });
     });
   },
@@ -57,32 +57,32 @@ export const MahasiswaController = {
         const validNIM = /^\d+$/;
         if (!validNIM.test(nim)) {
           MahasiswaView.printInvalidInput();
-          MahasiswaController.menuMahasiswa(rl);
+          return MahasiswaController.menuMahasiswa(rl);
         }
         rl.question("Nama: ", (nama) => {
           const validNama = /^[A-Za-z\s'.-]+$/;
           if (!validNama.test(nama)) {
             MahasiswaView.printInvalidInput();
-            MahasiswaController.menuMahasiswa(rl);
+            return MahasiswaController.menuMahasiswa(rl);
           }
           rl.question("Tanggal Lahir (YYYY-MM-DD): ", (tgllahir) => {
             const validTgl = /^\d{4}-\d{2}-\d{2}$/;
             if (!validTgl.test(tgllahir)) {
               MahasiswaView.printInvalidInput();
-              MahasiswaController.menuMahasiswa(rl);
+              return MahasiswaController.menuMahasiswa(rl);
             }
             rl.question("Alamat: ", (alamat) => {
               const validAlamat = /.+/;
               if (!validAlamat.test(alamat)) {
                 MahasiswaView.printInvalidInput();
-                MahasiswaController.menuMahasiswa(rl);
+                return MahasiswaController.menuMahasiswa(rl);
               }
               JurusanModel.getAll((rows) => {
                 JurusanView.printJurusan(rows);
                 rl.question("ID Jurusan: ", (id_jurusan) => {
                   MahasiswaModel.add(nim, nama, tgllahir, alamat, id_jurusan, () => {
                     MahasiswaView.printMahasiswaAdded(nim);
-                    MahasiswaController.menuMahasiswa(rl);
+                    return MahasiswaController.menuMahasiswa(rl);
                   });
                 });
               });
@@ -100,7 +100,7 @@ export const MahasiswaController = {
         } else {
           MahasiswaView.printMahasiswaNotFound(nim);
         }
-        MahasiswaController.menuMahasiswa(rl);
+        return MahasiswaController.menuMahasiswa(rl);
       });
     });
   },
