@@ -1,3 +1,4 @@
+import { MainMenuController } from "../Controllers/MainMenuController.js";
 import { centerText, sparator } from "./Utils/ViewUtils.js";
 
 export const LoginView = {

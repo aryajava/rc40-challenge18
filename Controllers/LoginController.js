@@ -1,5 +1,6 @@
 import LoginView from "../Views/LoginView.js";
 import { UserModel } from "../Models/UserModel.js";
+import { MainMenuController } from "./MainMenuController.js";
 
 export const LoginController = {
   login: (rl) => {
@@ -12,7 +13,7 @@ export const LoginController = {
         LoginView.promptPassword(rl, (password) => {
           if (password === user.password) {
             LoginView.showLoginSuccess(user);
-            // mainMenu();
+            MainMenuController.mainMenu(rl);
           } else {
             LoginView.showLoginFailure("Password salah");
             LoginController.login(rl);
