@@ -1,5 +1,6 @@
 import { MainMenuView } from "../Views/MainMenuView.js";
 import { db } from "../Models/Utils/DB.js";
+import { MahasiswaController } from "./MahasiswaController.js";
 
 export const MainMenuController = {
   mainMenu: (rl) => {
@@ -7,8 +8,8 @@ export const MainMenuController = {
     rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
       switch (option) {
         case "1":
-        //   MahasiswaController.menuMahasiswa(rl);
-        //   break;
+          MahasiswaController.menuMahasiswa(rl);
+          break;
         // case "2":
         //   cariMahasiswa();
         //   break;
