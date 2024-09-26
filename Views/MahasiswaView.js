@@ -10,6 +10,9 @@ export const MahasiswaView = {
     console.log("[4] Hapus Mahasiswa");
     console.log("[5] Kembali");
   },
+  printQuestion: () => {
+    return `Masukkan salah satu nomor dari opsi diatas: `;
+  },
   printMahasiswa: (rows) => {
     const table = new Table({
       head: ["NIM", "Nama", "Tanggal Lahir", "Alamat", "Kode Jurusan", "Nama Jurusan"],
@@ -35,6 +38,9 @@ export const MahasiswaView = {
   },
   printMahasiswaNotFound: (nim) => {
     console.log(`Mahasiswa dengan NIM '${nim}' tidak ditemukan`);
+  },
+  printMahasiswaExist: (nim) => {
+    console.log(`Mahasiswa dengan NIM '${nim}' sudah ada`);
   },
   printInvalidInput: () => {
     console.log("Input tidak valid");

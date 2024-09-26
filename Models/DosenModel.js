@@ -1,4 +1,4 @@
-import { db } from "./Utils/DB.js";
+import { db } from "./Config/Db.js";
 
 export class DosenModel {
   static getAll(callback) {
@@ -14,14 +14,10 @@ export class DosenModel {
     });
   }
   static add(id_dosen, nama, callback) {
-    db.run(
-      `INSERT INTO dosen (id_dosen, nama) VALUES (?, ?)`,
-      [id_dosen, nama],
-      (err) => {
-        if (err) throw err;
-        callback();
-      }
-    );
+    db.run(`INSERT INTO dosen (id_dosen, nama) VALUES (?, ?)`, [id_dosen, nama], (err) => {
+      if (err) throw err;
+      callback();
+    });
   }
   static delete(id_dosen, callback) {
     db.run("DELETE FROM dosen WHERE id_dosen = ?", [id_dosen], function (err) {

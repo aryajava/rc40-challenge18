@@ -10,6 +10,9 @@ export const MatakuliahView = {
     console.log("[4] Hapus Matakuliah");
     console.log("[5] Kembali");
   },
+  printQuestion: () => {
+    return `Masukkan salah satu nomor dari opsi diatas: `;
+  },
   printMatakuliah: (rows) => {
     const table = new Table({
       head: ["ID Matakuliah", "Nama Matakuliah", "SKS"],
@@ -33,6 +36,9 @@ export const MatakuliahView = {
   },
   printMatakuliahNotFound: (id) => {
     console.log(`Matakuliah dengan ID '${id}' tidak ditemukan`);
+  },
+  printMatakuliahExist: (id) => {
+    console.log(`Matakuliah dengan ID '${id}' sudah ada`);
   },
   printInvalidInput: () => {
     console.log("Input tidak valid");

@@ -10,6 +10,9 @@ export const DosenView = {
     console.log("[4] Hapus Dosen");
     console.log("[5] Kembali");
   },
+  printQuestion: () => {
+    return `Masukkan salah satu nomor dari opsi diatas: `;
+  },
   printDosen: (rows) => {
     const table = new Table({
       head: ["ID Dosen", "Nama Dosen"],
@@ -32,6 +35,9 @@ export const DosenView = {
   },
   printDosenNotFound: (id) => {
     console.log(`Dosen dengan ID '${id}' tidak ditemukan`);
+  },
+  printDosenExist: (id) => {
+    console.log(`Dosen dengan ID '${id}' sudah ada`);
   },
   printInvalidInput: () => {
     console.log("Input tidak valid");

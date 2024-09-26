@@ -7,7 +7,7 @@ import { MainMenuController } from "./MainMenuController.js";
 export const MahasiswaController = {
   menuMahasiswa: (rl) => {
     MahasiswaView.optMenuMahasiswa();
-    rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    rl.question(MahasiswaView.printQuestion(), (option) => {
       switch (option) {
         case "1":
           MahasiswaController.getAllMahasiswa(rl);
@@ -25,7 +25,7 @@ export const MahasiswaController = {
           MainMenuController.mainMenu(rl);
           break;
         default:
-          console.log("Opsi tidak valid");
+          MahasiswaView.printInvalidInput();
           MahasiswaController.menuMahasiswa(rl);
       }
     });
@@ -53,43 +53,62 @@ export const MahasiswaController = {
     MahasiswaModel.getAll((rows) => {
       MahasiswaView.printMahasiswa(rows);
       console.log(`Lengkapi data Mahasiswa di bawah ini:`);
-      rl.question("NIM: ", (nim) => {
-        const validNIM = /^\d+$/;
-        if (!validNIM.test(nim)) {
-          MahasiswaView.printInvalidInput();
-          return MahasiswaController.menuMahasiswa(rl);
-        }
+      const askNIM = () => {
+        rl.question("NIM: ", (nim) => {
+          const validNIM = /^\d+$/;
+          if (!validNIM.test(nim)) {
+            MahasiswaView.printInvalidInput();
+            return askNIM();
+          }
+          if (rows.find((row) => row.nim === nim)) {
+            MahasiswaView.printMahasiswaExist(nim);
+            return askNIM();
+          }
+          askNama(nim);
+        });
+      };
+      const askNama = (nim) => {
         rl.question("Nama: ", (nama) => {
           const validNama = /^[A-Za-z\s'.-]+$/;
           if (!validNama.test(nama)) {
             MahasiswaView.printInvalidInput();
-            return MahasiswaController.menuMahasiswa(rl);
+            return askNama(nim);
           }
-          rl.question("Tanggal Lahir (YYYY-MM-DD): ", (tgllahir) => {
-            const validTgl = /^\d{4}-\d{2}-\d{2}$/;
-            if (!validTgl.test(tgllahir)) {
-              MahasiswaView.printInvalidInput();
+          askTglLahir(nim, nama);
+        });
+      };
+      const askTglLahir = (nim, nama) => {
+        rl.question("Tanggal Lahir (YYYY-MM-DD): ", (tgllahir) => {
+          const validTgl = /^\d{4}-\d{2}-\d{2}$/;
+          if (!validTgl.test(tgllahir)) {
+            MahasiswaView.printInvalidInput();
+            return askTglLahir(nim, nama);
+          }
+          askAlamat(nim, nama, tgllahir);
+        });
+      };
+      const askAlamat = (nim, nama, tgllahir) => {
+        rl.question("Alamat: ", (alamat) => {
+          const validAlamat = /.+/;
+          if (!validAlamat.test(alamat)) {
+            MahasiswaView.printInvalidInput();
+            return askAlamat(nim, nama, tgllahir);
+          }
+          askJurusan(nim, nama, tgllahir, alamat);
+        });
+      };
+      const askJurusan = (nim, nama, tgllahir, alamat) => {
+        JurusanModel.getAll((rows) => {
+          JurusanView.printJurusan(rows);
+          rl.question("ID Jurusan: ", (id_jurusan) => {
+            MahasiswaModel.add(nim, nama, tgllahir, alamat, id_jurusan, () => {
+              MahasiswaView.printMahasiswaAdded(nim);
               return MahasiswaController.menuMahasiswa(rl);
-            }
-            rl.question("Alamat: ", (alamat) => {
-              const validAlamat = /.+/;
-              if (!validAlamat.test(alamat)) {
-                MahasiswaView.printInvalidInput();
-                return MahasiswaController.menuMahasiswa(rl);
-              }
-              JurusanModel.getAll((rows) => {
-                JurusanView.printJurusan(rows);
-                rl.question("ID Jurusan: ", (id_jurusan) => {
-                  MahasiswaModel.add(nim, nama, tgllahir, alamat, id_jurusan, () => {
-                    MahasiswaView.printMahasiswaAdded(nim);
-                    return MahasiswaController.menuMahasiswa(rl);
-                  });
-                });
-              });
             });
           });
         });
-      });
+      };
+      askNIM();
     });
   },
   hapusMahasiswa: (rl) => {

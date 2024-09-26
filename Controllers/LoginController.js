@@ -1,5 +1,5 @@
 import { UserModel } from "../Models/UserModel.js";
-import LoginView from "../Views/LoginView.js";
+import { LoginView } from "../Views/LoginView.js";
 import { MainMenuController } from "./MainMenuController.js";
 
 export const LoginController = {

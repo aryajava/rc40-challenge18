@@ -1,4 +1,4 @@
-import { db } from "./Utils/DB.js";
+import { db } from "./Config/Db.js";
 
 export class JurusanModel {
   static getAll(callback) {

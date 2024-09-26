@@ -5,7 +5,7 @@ import { MainMenuController } from "./MainMenuController.js";
 export const MatakuliahController = {
   menuMatakuliah: (rl) => {
     MatakuliahView.optMenuMatakuliah();
-    rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    rl.question(MatakuliahView.printQuestion(), (option) => {
       switch (option) {
         case "1":
           MatakuliahController.getAllMatakuliah(rl);
@@ -47,35 +47,53 @@ export const MatakuliahController = {
       });
     });
   },
+
   tambahMatakuliah: (rl) => {
     MatakuliahModel.getAll((rows) => {
       MatakuliahView.printMatakuliah(rows);
       console.log(`Lengkapi data Matakuliah di bawah ini:`);
-      rl.question("Masukan ID Matakuliah: ", (id) => {
-        const validID = /^[A-Za-z0-9]+$/;
-        if (!validID.test(id)) {
-          MatakuliahView.printInvalidInput();
-          return MatakuliahController.menuMatakuliah(rl);
-        }
+      const askID = () => {
+        rl.question("Masukan ID Matakuliah: ", (id) => {
+          const validID = /^[A-Z0-9]+$/;
+          if (!validID.test(id)) {
+            MatakuliahView.printInvalidInput();
+            return askID();
+          }
+          if (rows.find((row) => row.id_matakuliah === id)) {
+            MatakuliahView.printMatakuliahExist(id);
+            return askID();
+          }
+          askNama(id);
+        });
+      };
+      const askNama = (id) => {
         rl.question("Masukan Nama Matakuliah: ", (nama) => {
           const validNama = /^[A-Za-z0-9\s'.-]+$/;
           if (!validNama.test(nama)) {
             MatakuliahView.printInvalidInput();
-            return MatakuliahController.menuMatakuliah(rl);
+            return askNama(id);
           }
-          rl.question("SKS: ", (sks) => {
-            const validSKS = /^\d{1,1}$/;
-            if (!validSKS.test(sks)) {
-              MatakuliahView.printInvalidInput();
-              return MatakuliahController.menuMatakuliah(rl);
-            }
-            MatakuliahModel.add(id, nama, sks, () => {
-              MatakuliahView.printMatakuliahAdded(id);
-              return MatakuliahController.menuMatakuliah(rl);
-            });
+          if (rows.find((row) => row.nama === nama)) {
+            MatakuliahView.printMatakuliahExist(nama);
+            return askNama(id);
+          }
+          askSKS(id, nama);
+        });
+      };
+      const askSKS = (id, nama) => {
+        rl.question("SKS: ", (sks) => {
+          const validSKS = /^\d{1,1}$/;
+          if (!validSKS.test(sks)) {
+            MatakuliahView.printInvalidInput();
+            return askSKS(id, nama);
+          }
+          MatakuliahModel.add(id, nama, sks, () => {
+            MatakuliahView.printMatakuliahAdded(id);
+            return MatakuliahController.menuMatakuliah(rl);
           });
         });
-      });
+      };
+      askID();
     });
   },
   hapusMatakuliah: (rl) => {

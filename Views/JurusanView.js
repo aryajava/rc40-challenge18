@@ -10,6 +10,9 @@ export const JurusanView = {
     console.log("[4] Hapus Jurusan");
     console.log("[5] Kembali");
   },
+  printQuestion: () => {
+    return `Masukkan salah satu nomor dari opsi diatas: `;
+  },
   printJurusan: (rows) => {
     const table = new Table({
       head: ["Kode Jurusan", "Nama Jurusan"],

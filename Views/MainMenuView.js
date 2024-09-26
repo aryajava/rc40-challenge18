@@ -9,5 +9,14 @@ export const MainMenuView = {
     console.log("[4] Mata Kuliah");
     console.log("[5] Kontrak");
     console.log("[6] Keluar");
-  }
+  },
+  printQuestion: () => {
+    return `Masukkan salah satu nomor dari opsi diatas: `;
+  },
+  printExit: () => {
+    console.log("Keluar...");
+  },
+  printInvalidInput: () => {
+    console.log("Input tidak valid");
+  },
 };

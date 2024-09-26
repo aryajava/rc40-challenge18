@@ -5,7 +5,7 @@ import { MainMenuController } from "./MainMenuController.js";
 export const DosenController = {
   menuDosen: (rl) => {
     DosenView.optMenuDosen();
-    rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    rl.question(DosenView.printQuestion(), (option) => {
       switch (option) {
         case "1":
           DosenController.getAllDosen(rl);
@@ -51,24 +51,34 @@ export const DosenController = {
     DosenModel.getAll((rows) => {
       DosenView.printDosen(rows);
       console.log(`Lengkapi data Dosen di bawah ini:`);
-      rl.question("Masukan ID Dosen: ", (id) => {
-        const validID = /^[A-Za-z0-9]+$/;
-        if (!validID.test(id)) {
-          DosenView.printInvalidInput();
-          return DosenController.menuDosen(rl);
-        }
+      const askID = () => {
+        rl.question("Masukan ID Dosen: ", (id) => {
+          const validID = /^[A-Z0-9]+$/;
+          if (!validID.test(id)) {
+            DosenView.printInvalidInput();
+            return askID();
+          }
+          if (rows.find((row) => row.id_dosesn === id)) {
+            DosenView.printDosenExist(id);
+            return askID();
+          }
+          askNama(id);
+        });
+      };
+      const askNama = (id) => {
         rl.question("Masukan Nama Dosen: ", (nama) => {
           const validNama = /^[A-Za-z\s'.-]+$/;
           if (!validNama.test(nama)) {
             DosenView.printInvalidInput();
-            return DosenController.menuDosen(rl);
+            return askNama(id);
           }
           DosenModel.add(id, nama, () => {
             DosenView.printDosenAdded(id);
             return DosenController.menuDosen(rl);
           });
         });
-      });
+      };
+      askID();
     });
   },
   hapusDosen: (rl) => {

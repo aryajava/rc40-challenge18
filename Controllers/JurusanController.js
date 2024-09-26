@@ -5,7 +5,7 @@ import { MainMenuController } from "./MainMenuController.js";
 export const JurusanController = {
   menuJurusan: (rl) => {
     JurusanView.optMenuJurusan();
-    rl.question("Masukan salah satu nomor dari opsi diatas: ", (option) => {
+    rl.question(JurusanView.printQuestion(), (option) => {
       switch (option) {
         case "1":
           JurusanController.getAllJurusan(rl);
@@ -23,7 +23,7 @@ export const JurusanController = {
           MainMenuController.mainMenu(rl);
           break;
         default:
-          console.log("Opsi tidak valid");
+          JurusanView.printInvalidInput();
           JurusanController.menuJurusan(rl);
       }
     });
@@ -51,24 +51,35 @@ export const JurusanController = {
     JurusanModel.getAll((rows) => {
       JurusanView.printJurusan(rows);
       console.log(`Lengkapi data Jurusan di bawah ini:`);
-      rl.question("ID Jurusan: ", (id) => {
-        const validID = /^[A-Za-z0-9]+$/;
-        if (!validID.test(id)) {
-          JurusanView.printInvalidInput();
-          return JurusanController.menuJurusan(rl);
-        }
+      const askID = () => {
+        rl.question("ID Jurusan: ", (id) => {
+          const validID = /^[\d]{1,2}$/;
+          if (!validID.test(id)) {
+            JurusanView.printInvalidInput();
+            return askID();
+          }
+          if (rows.find((row) => row.id_jurusan === id)) {
+            JurusanView.printJurusanExist(id);
+            return askID();
+          }
+          askNama(id);
+        });
+      };
+      const askNama = (id) => {
         rl.question("Nama Jurusan: ", (nama) => {
           const validNama = /^[A-Za-z0-9\s]+$/;
           if (!validNama.test(nama)) {
             JurusanView.printInvalidInput();
-            return JurusanController.menuJurusan(rl);
+            return askNama(id);
           }
           JurusanModel.add(id, nama, () => {
             JurusanView.printJurusanAdded(id);
             return JurusanController.menuJurusan(rl);
           });
         });
-      });
+      };
+
+      askID();
     });
   },
   hapusJurusan: (rl) => {
