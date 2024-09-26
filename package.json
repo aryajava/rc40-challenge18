@@ -1,0 +1,29 @@
+{
+  "name": "challenge18",
+  "version": "1.0.0",
+  "description": "challange18-mvc",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryajava/rc40-challenge18.git#mvc"
+  },
+  "keywords": [
+    "javascript",
+    "mvc",
+    "nodejs"
+  ],
+  "author": "aryajava",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryajava/rc40-challenge18/issues"
+  },
+  "homepage": "https://github.com/aryajava/rc40-challenge18/tree/mvc#readme",
+  "dependencies": {
+    "cli-table": "^0.3.11",
+    "sqlite3": "^5.1.7"
+  }
+}
