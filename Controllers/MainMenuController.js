@@ -1,6 +1,7 @@
 import { MainMenuView } from "../Views/MainMenuView.js";
 import { db } from "../Models/Utils/DB.js";
 import { MahasiswaController } from "./MahasiswaController.js";
+import { JurusanController } from "./JurusanController.js";
 
 export const MainMenuController = {
   mainMenu: (rl) => {
@@ -10,9 +11,9 @@ export const MainMenuController = {
         case "1":
           MahasiswaController.menuMahasiswa(rl);
           break;
-        // case "2":
-        //   cariMahasiswa();
-        //   break;
+        case "2":
+          JurusanController.menuJurusan(rl);
+          break;
         // case "3":
         //   tambahMahasiswa();
         //   break;

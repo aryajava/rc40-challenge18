@@ -4,11 +4,11 @@ import { centerText } from "./Utils/ViewUtils.js";
 export const MahasiswaView = {
   optMenuMahasiswa: () => {
     console.log(`\n${centerText("**Menu Mahasiswa**")}`);
-    console.log("[1] Tampilkan semua mahasiswa");
-    console.log("[2] Cari mahasiswa");
-    console.log("[3] Tambah mahasiswa");
-    console.log("[4] Hapus mahasiswa");
-    console.log("[5] Kembali ke menu utama");
+    console.log("[1] Tampilkan Daftar Mahasiswa");
+    console.log("[2] Cari Mahasiswa");
+    console.log("[3] Tambah Mahasiswa");
+    console.log("[4] Hapus Mahasiswa");
+    console.log("[5] Kembali");
   },
   printMahasiswa: (rows) => {
     const table = new Table({
@@ -28,18 +28,15 @@ export const MahasiswaView = {
     console.log(`Jurusan        : ${data.namajurusan}`);
   },
   printMahasiswaAdded: (nim) => {
-    console.log(`\nMahasiswa dengan NIM ${nim} berhasil ditambahkan`);
+    console.log(`Mahasiswa dengan NIM '${nim}' berhasil ditambahkan`);
   },
   printMahasiswaDeleted: (nim) => {
-    console.log(`\nMahasiswa dengan NIM ${nim} berhasil dihapus`);
+    console.log(`Mahasiswa dengan NIM '${nim}' berhasil dihapus`);
   },
   printMahasiswaNotFound: (nim) => {
-    console.log(`\nMahasiswa dengan NIM ${nim} tidak ditemukan`);
+    console.log(`Mahasiswa dengan NIM '${nim}' tidak ditemukan`);
   },
   printInvalidInput: () => {
-    console.log("\nInput tidak valid");
-  },
-  printBackToMainMenu: () => {
-    console.log("\nKembali ke menu utama...");
+    console.log("Input tidak valid");
   },
 };
